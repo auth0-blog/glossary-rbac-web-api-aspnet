@@ -39,6 +39,16 @@ namespace Glossary
         };
       });
 
+      services.AddAuthorization(options =>
+      {
+        options.AddPolicy("AddAccess", policy =>
+                          policy.RequireClaim("permissions", "create:term"));
+        options.AddPolicy("UpdateAccess", policy =>
+                          policy.RequireClaim("permissions", "update:term"));
+        options.AddPolicy("DeleteAccess", policy =>
+                          policy.RequireClaim("permissions", "delete:term"));
+      });
+
       services.AddControllers();
 
       services.AddSwaggerGen(c =>
