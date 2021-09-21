@@ -7,6 +7,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System;
 using System.Collections.Generic;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Glossary
 {
@@ -30,6 +31,12 @@ namespace Glossary
       {
         options.Authority = $"https://{Configuration["Auth0:Domain"]}/";
         options.Audience = Configuration["Auth0:Audience"];
+
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            NameClaimType = "name",
+            RoleClaimType = "https://menu-api.demo.com/roles"
+        };
       });
 
       services.AddControllers();
