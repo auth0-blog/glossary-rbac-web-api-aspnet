@@ -9,4 +9,10 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="OpenApiSecurity\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="OpenApiSecurity\" />
+  </ItemGroup>
 </Project>

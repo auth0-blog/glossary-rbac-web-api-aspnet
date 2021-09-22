@@ -7,6 +7,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System;
 using System.Collections.Generic;
+using Glossary.OpenApiSecurity;
 
 namespace Glossary
 {
@@ -38,36 +39,19 @@ namespace Glossary
       {
         c.SwaggerDoc("v1", new OpenApiInfo { Title = "MyProject", Version = "v1.0.0" });
 
-        c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
-        {
-          Type = SecuritySchemeType.OAuth2,
-          Flows = new OpenApiOAuthFlows()
-          {
-            Implicit = new OpenApiOAuthFlow()
-            {
-              AuthorizationUrl = new Uri($"https://{Configuration["Auth0:Domain"]}/authorize"),
-              TokenUrl = new Uri($"https://{Configuration["Auth0:Domain"]}/token")
-            }
-          }
-        });
+        string securityDefinitionName = Configuration["SwaggerUISecurityMode"] ?? "Bearer";
+        OpenApiSecurityScheme securityScheme = new OpenApiBearerSecurityScheme();
+        OpenApiSecurityRequirement securityRequirement = new OpenApiBearerSecurityRequirement(securityScheme);
 
-        c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+        if (securityDefinitionName.ToLower() == "oauth2")
         {
-          {
-            new OpenApiSecurityScheme
-            {
-              Reference = new OpenApiReference
-              {
-                Type = ReferenceType.SecurityScheme,
-                Id = "oauth2"
-              },
-              Scheme = "oauth2",
-              Name = "oauth2",
-              In = ParameterLocation.Header
-            },
-            new List<string>()
-          }
-        });
+          securityScheme = new OpenApiOAuthSecurityScheme(Configuration["Auth0:Domain"], Configuration["Auth0:Audience"]);
+          securityRequirement = new OpenApiOAuthSecurityRequirement();
+        }
+
+        c.AddSecurityDefinition(securityDefinitionName, securityScheme);
+
+        c.AddSecurityRequirement(securityRequirement);
       });
     }
 
@@ -78,14 +62,18 @@ namespace Glossary
       {
         app.UseDeveloperExceptionPage();
         app.UseSwagger();
-        app.UseSwaggerUI(c => {
+        app.UseSwaggerUI(c =>
+        {
           c.SwaggerEndpoint("/swagger/v1/swagger.json", "Glossary v1");
 
-          c.OAuthClientId(Configuration["Auth0:ClientId"]);
-          c.OAuthClientSecret(Configuration["Auth0:ClientSecret"]);
-          c.OAuthAppName("GlossaryClient");
-          c.OAuthAdditionalQueryStringParams(new Dictionary<string, string> { { "audience", Configuration["Auth0:Audience"] } }); 
-          c.OAuthUseBasicAuthenticationWithAccessCodeGrant();
+          if (Configuration["SwaggerUISecurityMode"]?.ToLower() == "oauth2")
+          {
+            c.OAuthClientId(Configuration["Auth0:ClientId"]);
+            c.OAuthClientSecret(Configuration["Auth0:ClientSecret"]);
+            c.OAuthAppName("GlossaryClient");
+            c.OAuthAdditionalQueryStringParams(new Dictionary<string, string> { { "audience", Configuration["Auth0:Audience"] } });
+            c.OAuthUseBasicAuthenticationWithAccessCodeGrant();
+          }
         });
       }
 
