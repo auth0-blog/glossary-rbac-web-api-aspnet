@@ -10,16 +10,13 @@ This repository contains a basic glossary CRUD Web API implemented in ASP.NET an
 
 2. Move to the `glossary-rbac-web-api-aspnet` folder 
 
-3. Add your Auth0 domain, API identifier, Client Id and Client Secret to the `appsettings.json` configuration file (see [Registering the Web API with Auth0](https://auth0.com/blog/aspnet-web-api-authorization/#Registering-the-API-application-with-Auth0) for more details).
+3. Add your Auth0 domain, API identifier to the `appsettings.json` configuration file (see [Registering the Web API with Auth0](https://auth0.com/blog/aspnet-web-api-authorization/#Registering-the-API-application-with-Auth0) for more details).
 
 4. Type `dotnet run` in a terminal window to launch the Web API.
 
 5. Point your browser to `https://localhost:5001/swagger` to test the available endpoints and actions.
 
 ![webapi-swagger-ui](https://images.ctfassets.net/23aumh6u8s0i/1rNBChKdbCr9fKdpbbYcKR/014f6ace0411febc726959cd88ed8e6a/protected-swagger-ui-webapi.png)
-
-6. To call a protected endpoint, you need to click the Authorize button. You will be asked to log in to Auth0 to get an access token and call the API endpoint:
-   ![swagger-client-authorization](images/swagger-client-authorization.png)
 
 
 ## Requirements:
