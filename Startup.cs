@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System;
 using System.Collections.Generic;
 using Microsoft.IdentityModel.Tokens;
+using Glossary.OpenApiSecurity;
 
 namespace Glossary
 {
@@ -55,36 +56,19 @@ namespace Glossary
       {
         c.SwaggerDoc("v1", new OpenApiInfo { Title = "MyProject", Version = "v1.0.0" });
 
-        c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
-        {
-          Type = SecuritySchemeType.OAuth2,
-          Flows = new OpenApiOAuthFlows()
-          {
-            Implicit = new OpenApiOAuthFlow()
-            {
-              AuthorizationUrl = new Uri($"https://{Configuration["Auth0:Domain"]}/authorize"),
-              TokenUrl = new Uri($"https://{Configuration["Auth0:Domain"]}/token")
-            }
-          }
-        });
+        string securityDefinitionName = Configuration["SwaggerUISecurityMode"] ?? "Bearer";
+        OpenApiSecurityScheme securityScheme = new OpenApiBearerSecurityScheme();
+        OpenApiSecurityRequirement securityRequirement = new OpenApiBearerSecurityRequirement(securityScheme);
 
-        c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+        if (securityDefinitionName.ToLower() == "oauth2")
         {
-          {
-            new OpenApiSecurityScheme
-            {
-              Reference = new OpenApiReference
-              {
-                Type = ReferenceType.SecurityScheme,
-                Id = "oauth2"
-              },
-              Scheme = "oauth2",
-              Name = "oauth2",
-              In = ParameterLocation.Header
-            },
-            new List<string>()
-          }
-        });
+          securityScheme = new OpenApiOAuthSecurityScheme(Configuration["Auth0:Domain"], Configuration["Auth0:Audience"]);
+          securityRequirement = new OpenApiOAuthSecurityRequirement();
+        }
+
+        c.AddSecurityDefinition(securityDefinitionName, securityScheme);
+
+        c.AddSecurityRequirement(securityRequirement);
       });
     }
 
