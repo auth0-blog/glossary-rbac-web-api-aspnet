@@ -7,7 +7,6 @@ using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System;
 using System.Collections.Generic;
-using Microsoft.IdentityModel.Tokens;
 using Glossary.OpenApiSecurity;
 
 namespace Glossary
@@ -32,22 +31,6 @@ namespace Glossary
       {
         options.Authority = $"https://{Configuration["Auth0:Domain"]}/";
         options.Audience = Configuration["Auth0:Audience"];
-
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            NameClaimType = "name",
-            RoleClaimType = "https://menu-api.demo.com/roles"
-        };
-      });
-
-      services.AddAuthorization(options =>
-      {
-        options.AddPolicy("AddAccess", policy =>
-                          policy.RequireClaim("permissions", "create:term"));
-        options.AddPolicy("UpdateAccess", policy =>
-                          policy.RequireClaim("permissions", "update:term"));
-        options.AddPolicy("DeleteAccess", policy =>
-                          policy.RequireClaim("permissions", "delete:term"));
       });
 
       services.AddControllers();
@@ -79,14 +62,18 @@ namespace Glossary
       {
         app.UseDeveloperExceptionPage();
         app.UseSwagger();
-        app.UseSwaggerUI(c => {
+        app.UseSwaggerUI(c =>
+        {
           c.SwaggerEndpoint("/swagger/v1/swagger.json", "Glossary v1");
 
-          c.OAuthClientId(Configuration["Auth0:ClientId"]);
-          c.OAuthClientSecret(Configuration["Auth0:ClientSecret"]);
-          c.OAuthAppName("GlossaryClient");
-          c.OAuthAdditionalQueryStringParams(new Dictionary<string, string> { { "audience", Configuration["Auth0:Audience"] } }); 
-          c.OAuthUseBasicAuthenticationWithAccessCodeGrant();
+          if (Configuration["SwaggerUISecurityMode"]?.ToLower() == "oauth2")
+          {
+            c.OAuthClientId(Configuration["Auth0:ClientId"]);
+            c.OAuthClientSecret(Configuration["Auth0:ClientSecret"]);
+            c.OAuthAppName("GlossaryClient");
+            c.OAuthAdditionalQueryStringParams(new Dictionary<string, string> { { "audience", Configuration["Auth0:Audience"] } });
+            c.OAuthUseBasicAuthenticationWithAccessCodeGrant();
+          }
         });
       }
 
