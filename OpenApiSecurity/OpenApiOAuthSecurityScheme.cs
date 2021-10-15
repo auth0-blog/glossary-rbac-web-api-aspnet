@@ -10,10 +10,10 @@ namespace Glossary.OpenApiSecurity
       Type = SecuritySchemeType.OAuth2;
       Flows = new OpenApiOAuthFlows()
       {
-        Implicit = new OpenApiOAuthFlow()
+        AuthorizationCode = new OpenApiOAuthFlow
         {
           AuthorizationUrl = new Uri($"https://{domain}/authorize"),
-          TokenUrl = new Uri($"https://{audience}/token")
+          TokenUrl = new Uri($"https://{domain}/oauth/token")
         }
       };
     }

@@ -82,7 +82,7 @@ namespace Glossary
             c.OAuthClientSecret(Configuration["Auth0:ClientSecret"]);
             c.OAuthAppName("GlossaryClient");
             c.OAuthAdditionalQueryStringParams(new Dictionary<string, string> { { "audience", Configuration["Auth0:Audience"] } });
-            c.OAuthUseBasicAuthenticationWithAccessCodeGrant();
+            c.OAuthUsePkce();
           }
         });
       }
