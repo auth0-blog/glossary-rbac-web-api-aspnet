@@ -53,6 +53,16 @@ namespace Glossary
 
         c.AddSecurityRequirement(securityRequirement);
       });
+
+      services.AddAuthorization(options =>
+      {
+        options.AddPolicy("WriteAccess", policy =>
+                          policy.RequireClaim("permissions", "create:term"));
+        options.AddPolicy("UpdateAccess", policy =>
+                          policy.RequireClaim("permissions", "update:term"));
+        options.AddPolicy("DeleteAccess", policy =>
+                          policy.RequireClaim("permissions", "delete:term"));
+      });
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
