@@ -56,7 +56,7 @@ namespace Glossary
 
       services.AddAuthorization(options =>
       {
-        options.AddPolicy("WriteAccess", policy =>
+        options.AddPolicy("CreateAccess", policy =>
                           policy.RequireClaim("permissions", "create:term"));
         options.AddPolicy("UpdateAccess", policy =>
                           policy.RequireClaim("permissions", "update:term"));

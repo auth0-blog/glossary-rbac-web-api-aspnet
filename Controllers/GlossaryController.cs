@@ -52,7 +52,7 @@ namespace Glossary.Controllers
     }
 
     [HttpPost]
-    [Authorize(Policy = "WriteAccess")]
+    [Authorize(Policy = "CreateAccess")]
     public ActionResult Post(GlossaryItem glossaryItem)
     {
       var existingGlossaryItem = Glossary.Find(item =>
