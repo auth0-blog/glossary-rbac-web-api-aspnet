@@ -12,7 +12,7 @@ Check out the article [Role-Based Authorization for ASP.NET Web APIs](https://au
 
 2. Move to the `glossary-rbac-web-api-aspnet` folder 
 
-3. Add your Auth0 domain, API identifier, Client ID, and Client Secret to the `appsettings.json` configuration file (see [Registering the Web API with Auth0](https://auth0.com/blog/aspnet-web-api-authorization/#Registering-the-API-application-with-Auth0) and [this](https://auth0.com/blog/role-based-authorization-for-aspnet-webapi/#Configuring-the-client) for more details).
+3. Add your Auth0 domain, API identifier, Client ID, and Client Secret to the `appsettings.json` configuration file (see [Registering the Web API with Auth0](https://auth0.com/blog/aspnet-web-api-authorization/#Registering-the-API-application-with-Auth0) and [Configuring the client](https://auth0.com/blog/role-based-authorization-for-aspnet-webapi/#Configuring-the-client) for more details).
 
 4. Type `dotnet run` in a terminal window to launch the Web API.
 
