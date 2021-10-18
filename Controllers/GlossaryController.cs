@@ -52,7 +52,7 @@ namespace Glossary.Controllers
     }
 
     [HttpPost]
-    [Authorize(Policy = "AddAccess")]
+    [Authorize(Policy = "CreateAccess")]
     public ActionResult Post(GlossaryItem glossaryItem)
     {
       var existingGlossaryItem = Glossary.Find(item =>
@@ -90,7 +90,7 @@ namespace Glossary.Controllers
 
     [HttpDelete]
     [Route("{term}")]
-    [Authorize(Policy="DeleteAccess")]
+    [Authorize(Policy = "DeleteAccess")]
     public ActionResult Delete(string term)
     {
       var glossaryItem = Glossary.Find(item =>
